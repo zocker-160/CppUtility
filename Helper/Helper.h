@@ -22,7 +22,7 @@ bool readBytes(void* read_addr, void* read_buffer, int len);
 void writeBytes(void* dest_addr, void* patch, int len);
 
 HMODULE getBaseAddress();
-HMODULE getMatchmakingAddress();
+HMODULE getModuleAddress(LPCSTR moduleName);
 
 DWORD* calcAddress(DWORD appl_addr);
 DWORD* tracePointer(memoryPTR* patch);

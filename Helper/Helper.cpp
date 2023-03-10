@@ -38,8 +38,8 @@ void writeBytes(void* dest_addr, void* patch, int len) {
 HMODULE getBaseAddress() {
     return GetModuleHandle(NULL);
 }
-HMODULE getMatchmakingAddress() {
-    return GetModuleHandle("matchmaking.dll");
+HMODULE getModuleAddress(LPCSTR moduleName) {
+    return GetModuleHandle(moduleName);
 }
 
 DWORD* calcAddress(DWORD appl_addr) {
