@@ -45,6 +45,9 @@ HMODULE getModuleAddress(LPCSTR moduleName) {
 DWORD* calcAddress(DWORD appl_addr) {
     return (DWORD*)((DWORD)getBaseAddress() + appl_addr);
 }
+DWORD* calcModuleAddress(HMODULE module, DWORD appl_addr) {
+    return (DWORD*)((DWORD)module + appl_addr);
+}
 DWORD* tracePointer(memoryPTR* patch) {
     DWORD* location = calcAddress(patch->base_address);
 
