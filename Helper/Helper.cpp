@@ -142,6 +142,18 @@ void getDesktopResolution2(int& hor, int& vert) {
     vert = GetSystemMetrics(SM_CYSCREEN);
 }
 
+void getMainScreenResolution(int& hor, int& vert) {
+    DEVMODE lpDevMode;
+    memset(&lpDevMode, 0, sizeof(lpDevMode));
+    lpDevMode.dmSize = sizeof(DEVMODE);
+    lpDevMode.dmDriverExtra = 0;
+
+    if (EnumDisplaySettings(NULL, ENUM_CURRENT_SETTINGS, &lpDevMode)) {
+        hor = lpDevMode.dmPelsWidth;
+        vert = lpDevMode.dmPelsHeight;
+    }
+}
+
 int getDesktopRefreshRate() {
     DEVMODE lpDevMode;
     memset(&lpDevMode, 0, sizeof(lpDevMode));

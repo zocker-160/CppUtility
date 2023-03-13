@@ -34,6 +34,7 @@ bool functionInjectorReturn(void* hookAddr, void* function, DWORD& returnAddr, i
 
 void getDesktopResolution(int& horizontal, int& vertical);
 void getDesktopResolution2(int& hor, int& vert);
+void getMainScreenResolution(int& hor, int& vert);
 
 int getDesktopRefreshRate();
 
