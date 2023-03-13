@@ -25,6 +25,7 @@ public:
 
     explicit Logger(char* module, char* logfile, bool console = false) {
         this->module = module;
+        remove(logfile);
 
         if (console)
             setupConsole();
