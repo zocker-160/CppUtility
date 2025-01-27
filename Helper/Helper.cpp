@@ -40,10 +40,10 @@ void writeBytes(void* dest_addr, void* patch, int len) {
 
 /* fiddle around with the pointers */
 HMODULE getBaseAddress() {
-    return GetModuleHandle(NULL);
+    return GetModuleHandleA(NULL);
 }
 HMODULE getModuleAddress(LPCSTR moduleName) {
-    return GetModuleHandle(moduleName);
+    return GetModuleHandleA(moduleName);
 }
 
 DWORD* calcAddress(DWORD appl_addr) {
@@ -143,18 +143,18 @@ int getDesktopRefreshRate() {
         return 0;
 }
 
+float getAspectRatio() {
+    int horizontal, vertical;
+
+    getDesktopResolution2(horizontal, vertical);
+    return calcAspectRatio(horizontal, vertical);
+}
+
 float calcAspectRatio(int horizontal, int vertical) {
     if (horizontal > 0 && vertical > 0)
         return (float)horizontal / (float)vertical;
     else
         return -1.0f;
-}
-
-float calcAspectRatio() {
-    int horizontal, vertical;
-
-    getDesktopResolution2(horizontal, vertical);
-    return calcAspectRatio(horizontal, vertical);
 }
 
 /* other helper functions and stuff */
@@ -164,7 +164,7 @@ bool isKeyPressed(int vKey) {
 }
 
 bool isWine() {
-    HMODULE ntdllMod = GetModuleHandle("ntdll.dll");
+    HMODULE ntdllMod = GetModuleHandleA("ntdll.dll");
 
     return ntdllMod && GetProcAddress(ntdllMod, "wine_get_version");
 }
@@ -206,7 +206,7 @@ HMODULE getBaseModule() {
 }
 
 void getGameDirectory(HMODULE hm, char* path, int size, char* loc, int levels) {
-    GetModuleFileName(hm, path, size);
+    GetModuleFileNameA(hm, path, size);
 
     for (int i = 0; i <= levels; i++) {
         *strrchr(path, '\\') = '\0';

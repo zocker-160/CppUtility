@@ -7,7 +7,8 @@
  */
 #pragma once
 
-#include <Windows.h>
+#include <windows.h>
+
 #include <vector>
 #include <sstream>
 #include <iostream>
@@ -46,7 +47,7 @@ bool isKeyPressed(int vKey);
 bool isWine();
 bool isVulkanSupported();
 
-float calcAspectRatio();
+float getAspectRatio();
 float calcAspectRatio(int horizontal, int vertical);
 
 bool getFileChecksum(char* filePath, std::string& checksum);
