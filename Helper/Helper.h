@@ -38,6 +38,7 @@ void getMainScreenResolution(int& hor, int& vert);
 
 int getDesktopRefreshRate();
 
+HMODULE getBaseModule();
 void getGameDirectory(HMODULE hm, char* path, int size, char* location, int levels = 0);
 
 bool isKeyPressed(int vKey);
@@ -47,3 +48,5 @@ bool isVulkanSupported();
 
 float calcAspectRatio();
 float calcAspectRatio(int horizontal, int vertical);
+
+bool getFileChecksum(char* filePath, std::string& checksum);

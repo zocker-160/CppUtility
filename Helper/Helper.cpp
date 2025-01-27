@@ -6,7 +6,11 @@
  * @description collection of useful functions for DLL hacks
  */
 
+#include <iostream>
+#include <fstream>
+
 #include "Helper.h"
+#include "SHA256.h"
 
  // reading and writing stuff / helper functions and other crap
 
@@ -93,33 +97,6 @@ bool functionInjectorReturn(void* hookAddr, void* function, DWORD& returnAddr, i
     writeBytes((DWORD*)((DWORD)hookAddr + 1), &relAddr, 4);
 
     return true;
-}
-
-/* logging stuff */
-void showMessage(float val) {
-    std::cout << "DEBUG: " << val << "\n";
-    return;
-    std::stringstream ss;
-    ss << "Debug: " << val;
-    MessageBoxA(NULL, (LPCSTR)ss.str().c_str(), "ZoomPatch by zocker_160", MB_OK);
-}
-void showMessage(int val) {
-    std::cout << "DEBUG: " << val << "\n";
-    return;
-    std::stringstream ss;
-    ss << "Debug: " << val;
-    MessageBoxA(NULL, (LPCSTR)ss.str().c_str(), "ZoomPatch by zocker_160", MB_OK);
-}
-void showMessage(short val) {
-    std::cout << "DEBUG: " << val << "\n";
-    return;
-}
-void showMessage(char* val) {
-    std::cout << "DEBUG: " << val << "\n";
-}
-void showMessage(LPCSTR val) {
-    std::cout << "DEBUG: " << val << "\n";
-    //MessageBoxA(NULL, val, "ZoomPatch by zocker_160", MB_OK);
 }
 
 /* resolution stuff */
@@ -218,6 +195,16 @@ bool isVulkanSupported() {
     return true;
 }
 
+HMODULE getBaseModule() {
+    HMODULE base;
+    GetModuleHandleExA(
+        GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS | GET_MODULE_HANDLE_EX_FLAG_UNCHANGED_REFCOUNT,
+        (LPCSTR)getBaseAddress(),
+        &base
+    );
+    return base;
+}
+
 void getGameDirectory(HMODULE hm, char* path, int size, char* loc, int levels) {
     GetModuleFileName(hm, path, size);
 
@@ -226,4 +213,25 @@ void getGameDirectory(HMODULE hm, char* path, int size, char* loc, int levels) {
     }
 
     strcat_s(path, size, loc);
+}
+
+
+bool getFileChecksum(char* filePath, std::string& checksum) {
+    std::ifstream file(filePath, std::ios::binary | std::ios::ate);
+    if (!file) {
+        return false;
+    }
+
+    size_t filesize = file.tellg();
+    char* filebuffer = (char*)malloc(filesize);
+
+    file.seekg(0, std::ios::beg);
+    file.read(filebuffer, filesize);
+    file.close();
+
+    checksum = sha256(filebuffer, filesize);
+
+    free(filebuffer);
+
+    return true;
 }
