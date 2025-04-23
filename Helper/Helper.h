@@ -13,6 +13,12 @@
 #include <sstream>
 #include <iostream>
 
+#define NAKED __declspec(naked) void
+#define JMP(addr) {_asm{jmp[addr]}}
+#define DLLEXPORT(ddraw, func) NAKED f_##func() JMP(ddraw.func)
+#define PROXYADDR(ddraw, module, func) ddraw.func = GetProcAddress(module, #func)
+
+
 struct memoryPTR {
     DWORD base_address;
     std::vector<int> offsets;
