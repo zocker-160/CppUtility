@@ -38,6 +38,31 @@ void writeBytes(void* dest_addr, void* patch, int len) {
     protectedRead(dest_addr, patch, len);
 }
 
+/* check if specific memory address is readable by us */
+bool isMemoryReadable(void* addr) {
+    MEMORY_BASIC_INFORMATION mbi = {0};
+    if (VirtualQuery(addr, &mbi, sizeof(mbi)) == 0)
+        return false;                         // address outside any region
+
+    if (mbi.State != MEM_COMMIT)             // reserved or free
+        return false;
+
+    // Strip out the modifier bits (PAGE_GUARD, PAGE_NOCACHE, etc.)
+    DWORD prot = mbi.Protect & 0xFF;
+
+    switch (prot) {
+        case PAGE_READONLY:
+        case PAGE_READWRITE:
+        case PAGE_WRITECOPY:
+        case PAGE_EXECUTE_READ:
+        case PAGE_EXECUTE_READWRITE:
+        case PAGE_EXECUTE_WRITECOPY:
+            return true;                     // page allows reads
+        default:
+            return false;                    // PAGE_NOACCESS, PAGE_EXECUTE, …
+    }
+}
+
 /* fiddle around with the pointers */
 HMODULE getBaseAddress() {
     return GetModuleHandleA(NULL);
@@ -205,7 +230,7 @@ HMODULE getBaseModule() {
     return base;
 }
 
-void getGameDirectory(HMODULE hm, char* path, int size, char* loc, int levels) {
+void getGameDirectory(HMODULE hm, char* path, int size, const char* loc, int levels) {
     GetModuleFileNameA(hm, path, size);
 
     for (int i = 0; i <= levels; i++) {

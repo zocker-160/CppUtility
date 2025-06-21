@@ -28,6 +28,8 @@ void protectedRead(void* dest, void* src, int n);
 bool readBytes(void* read_addr, void* read_buffer, int len);
 void writeBytes(void* dest_addr, void* patch, int len);
 
+bool isMemoryReadable(void* addr);
+
 HMODULE getBaseAddress();
 HMODULE getModuleAddress(LPCSTR moduleName);
 
