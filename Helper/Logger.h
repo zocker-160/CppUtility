@@ -9,6 +9,7 @@
 
 #include <Windows.h>
 #include <iostream>
+#include <string>
 
 namespace Logging {
 
@@ -16,16 +17,16 @@ typedef std::ostream& (*Manip1)(std::ostream&);
 
 class Logger {
 public:
-    explicit Logger(char* module, bool console = false) {
+    explicit Logger(std::string module, bool console = false) {
         this->module = module;
 
         if (console)
             setupConsole();
     }
 
-    explicit Logger(char* module, char* logfile, bool console = false) {
+    explicit Logger(std::string module, std::string logfile, bool console = false) {
         this->module = module;
-        remove(logfile);
+        remove(logfile.c_str());
 
         if (console)
             setupConsole();
@@ -46,35 +47,35 @@ public:
     Logger& debug() {
         return printSelf("DEBUG");
     }
-    void debug(char* msg) {
+    void debug(std::string msg) {
         debug() << msg << std::endl;
     }
 
     Logger& info() {
         return printSelf("INFO");
     }
-    void info(char* msg) {
+    void info(std::string msg) {
         info() << msg << std::endl;
     }
 
     Logger& warn() {
         return printSelf("WARN");
     }
-    void warn(char* msg) {
+    void warn(std::string msg) {
         warn() << msg << std::endl;
     }
 
     Logger& error() {
         return printSelf("ERROR");
     }
-    void error(char* msg) {
+    void error(std::string msg) {
         error() << msg << std::endl;
     }
 
     Logger& naked() {
         return *this;
     }
-    void naked(char* msg) {
+    void naked(std::string msg) {
         naked() << msg << std::endl;
     }
 
@@ -84,13 +85,13 @@ public:
     }
 
 private:
-    char* module;
-    char* level = "DEBUG";
+    std::string module;
+    std::string level = "DEBUG";
 
     FILE* fp;
     FILE* flog;
 
-    Logger& printSelf(char* level) {
+    Logger& printSelf(std::string level) {
         this->level = level;
         std::cout << *this << "\t";
         return *this;
@@ -101,8 +102,8 @@ private:
         freopen_s(&fp, "CONOUT$", "w", stdout);
     }
 
-    void setupLogfile(char* logfile) {
-        freopen_s(&flog, logfile, "w", stdout);
+    void setupLogfile(std::string logfile) {
+        freopen_s(&flog, logfile.c_str(), "w", stdout);
     }
 };
 

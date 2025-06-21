@@ -48,7 +48,7 @@ void getMainScreenResolution(int& hor, int& vert);
 int getDesktopRefreshRate();
 
 HMODULE getBaseModule();
-void getGameDirectory(HMODULE hm, char* path, int size, char* location, int levels = 0);
+void getGameDirectory(HMODULE hm, char* path, int size, const char* location, int levels = 0);
 
 bool isKeyPressed(int vKey);
 
